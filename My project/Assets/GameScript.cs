@@ -45,5 +45,9 @@ public class GameScript : MonoBehaviour
             print("Right");
             rb.velocity = transform.right * walkingSpeed;
         }
+        else
+        {
+            rb.velocity = transform.forward * 0;
+        }
     }
 }
