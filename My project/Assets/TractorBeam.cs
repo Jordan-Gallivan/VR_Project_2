@@ -7,20 +7,20 @@ using UnityEngine;
 public class TractorBeam : MonoBehaviour
 {
     // Initialize boolean control values
-    private bool itemSelected = false;
-    private bool tractorBeamActive = false;
-    private bool summonActive = false;
-    private bool rotateItem = false;
-    private bool moveItem = false;
-
-    // public GameObject ConeCast;
-    // private Collider collider;
-
+    private bool itemSelected;
+    private bool tractorBeamActive;
+    private bool summonActive;
+    private bool rotateItem;
+    private bool moveItem;
+    
     public GameObject player;
-    private GameObject selectedItem;
     public LayerMask mask;
+    
+    private GameObject selectedItem;
+    
+    private MovableItem movableItem;
 
-    public float tractorBeamSpeed = 1;
+    public float tractorBeamSpeed = 100;
     
     /** Outside to-do's
      * Make a class for movable objects that has a toggle for organic movement/summoning
@@ -29,7 +29,7 @@ public class TractorBeam : MonoBehaviour
     
     /** Overall Logic
      * left hand -> item selection
-     *      grasp = tractor beam on/off
+     *      grasp = tractor beam on/off  
      *      trigger = summon nearest object
      * 
      * right hand -> item manipulation
@@ -45,11 +45,17 @@ public class TractorBeam : MonoBehaviour
      *              ??? how to determine rotation of hand controller in C#
      */
     
-    
-    // Start is called before the first frame update
     void Start()
     {
+        // initialize boolean control values
+        this.itemSelected = false;
+        this.tractorBeamActive = false;
+        this.summonActive = false;
+        this.rotateItem = false;
+        this.moveItem = false;
+        
         this.selectedItem = null;
+        this.movableItem = null;
     }
 
     // Update is called once per frame
@@ -57,7 +63,7 @@ public class TractorBeam : MonoBehaviour
     {
         // Initializes the tractor beam by sphere casting in the direction of the controller
         // the closest "summonable" item is set as this.itemSelected if one exists
-        if ( true /* tractorBeamActive */ )
+        if ( tractorBeamActive )
         {
             RaycastHit[] tractorBeamObjs =
                 Physics.SphereCastAll(this.player.transform.position, 
@@ -65,32 +71,39 @@ public class TractorBeam : MonoBehaviour
             float nearest = Mathf.Infinity;
             
             // iterate through hits and determine nearest "summonable" object
-            foreach (RaycastHit hit in tractorBeamObjs)
+            foreach ( RaycastHit hit in tractorBeamObjs )
             {
-                if (hit.distance < nearest && hit.collider.CompareTag("summonable"))
+                if ( (hit.distance < nearest) && (hit.collider.gameObject != this.selectedItem) && 
+                    hit.collider.CompareTag("summonable") )
                 {
+                    if ( movableItem ) movableItem.itemIsSelected = false;
                     nearest = hit.distance;
                     this.selectedItem = hit.collider.gameObject;
                     this.itemSelected = true;
+                    movableItem = this.selectedItem.GetComponent<MovableItem>();
+                    movableItem.itemIsSelected = true;
                 }
             }
-        }
+        } // end tractorbeam update
         
         // summons the item by transforming it in the direction of the player
-        if ( itemSelected && tractorBeamActive && summonActive ) 
+        if ( itemSelected /*&& tractorBeamActive*/ && summonActive )
         {
+            Transform itemPos = this.selectedItem.transform;
+            Transform playerPos = this.player.transform;
+            float scaledDistance =
+                Mathf.Exp(Vector3.Distance(playerPos.position, itemPos.position));
             
-            this.selectedItem.transform.position = Vector3.MoveTowards(this.selectedItem.transform.position, 
-                this.player.transform.position, Time.deltaTime * tractorBeamSpeed);
-            
+            itemPos.position = Vector3.MoveTowards(itemPos.position, 
+                playerPos.position, Time.deltaTime * tractorBeamSpeed /** scaledDistance*/);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            this.selectedItem.GetComponent<MoveableItem>().itemIsSelected = true;
-        }
+        if (Input.GetKeyDown(KeyCode.Space)) this.ActivateTractorBeam();
+        if (Input.GetKeyUp(KeyCode.Space)) this.DeactivateTractorBeam();
+        if (Input.GetKeyDown(KeyCode.O)) this.SummonObject();
+        if (Input.GetKeyUp(KeyCode.O)) this.DeactivateSummon();
         
-    }
+    } // end update()
 
     public void ActivateTractorBeam()
     {
@@ -99,6 +112,7 @@ public class TractorBeam : MonoBehaviour
 
     public void DeactivateTractorBeam()
     {
+        movableItem.itemIsSelected = false;
         tractorBeamActive = false;
         itemSelected = false;
         this.selectedItem = null;
