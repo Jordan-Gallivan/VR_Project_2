@@ -25,24 +25,24 @@ public class GameScript : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.T))
         {
-            print("Forward");
+            //print("Forward");
             rb.velocity = transform.forward * walkingSpeed;
         }
 
         else if (Input.GetKey(KeyCode.G))
         {
-            print("Backwards");
+            //print("Backwards");
             rb.velocity = -transform.forward * walkingSpeed;
         }
         else if (Input.GetKey(KeyCode.F))
         {
-            print("Left");
+            //print("Left");
             rb.velocity = -transform.right * walkingSpeed;
             
         }
         else if (Input.GetKey(KeyCode.H))
         {
-            print("Right");
+            //print("Right");
             rb.velocity = transform.right * walkingSpeed;
         }
         else
