@@ -18,7 +18,10 @@ public class CowboyScript : MonoBehaviour
     public float dist;
     private GameObject playerObj;
 
-    public GameObject deathSmoke;
+    public bool playerInRange = false;
+    public float lastAttackTime = 0f;
+
+    public Rigidbody bulletPrefab;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +45,17 @@ public class CowboyScript : MonoBehaviour
             this.speed = new Vector3(xSpeed, ySpeed, zSpeed);
         }
         distanceCall();
+        if (playerInRange == true)
+        {
+            transform.rotation = Quaternion.LookRotation(playerObj.transform.position - transform.position, transform.up);
+            if (Time.time - lastAttackTime >= 1f)
+            {
+                shoot();
+                lastAttackTime = Time.time;
+            }
+            
+            
+        }
     }
 
     void distanceCall()
@@ -49,8 +63,18 @@ public class CowboyScript : MonoBehaviour
         dist = Vector3.Distance(playerObj.transform.position, transform.position);
         if (dist < minDist)
         {
-            print("Distance acheived");
+            playerInRange = true;
+        }
+        else
+        {
+
+            playerInRange = false;
         }
         
+    }
+    void shoot()
+    {
+        var projectile = Instantiate(bulletPrefab, transform.position, transform.rotation);
+        projectile.velocity = transform.forward * 5;   
     }
 }
