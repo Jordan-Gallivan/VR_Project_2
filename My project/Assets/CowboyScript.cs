@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Valve.VR.InteractionSystem;
 
@@ -50,6 +51,7 @@ public class CowboyScript : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(playerObj.transform.position - transform.position, transform.up);
             if (Time.time - lastAttackTime >= 1f)
             {
+                
                 shoot();
                 lastAttackTime = Time.time;
             }
@@ -75,6 +77,10 @@ public class CowboyScript : MonoBehaviour
     void shoot()
     {
         var projectile = Instantiate(bulletPrefab, transform.position, transform.rotation);
-        projectile.velocity = transform.forward * 5;   
+        projectile.velocity = transform.forward * 50;
+        //yield return new WaitForSeconds(5);
+        //Destroy(bulletPrefab);
     }
+
+   
 }
