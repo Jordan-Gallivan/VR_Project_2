@@ -21,12 +21,12 @@ public class TractorBeam : MonoBehaviour
     private MovableItem movableItem;
 
     public float tractorBeamSpeed = 100;
-    
+
     /** Outside to-do's
      * Make a class for movable objects that has a toggle for organic movement/summoning
-     * 
+     * assign sphere cast to originate from cylinder
      */
-    
+
     /** Overall Logic
      * left hand -> item selection
      *      grasp = tractor beam on/off  
@@ -43,8 +43,9 @@ public class TractorBeam : MonoBehaviour
      *      trigger = rotate object
      *          -> tied to rotation of hand controller
      *              ??? how to determine rotation of hand controller in C#
+     * https://docs.unity3d.com/Manual/xr_input.html
      */
-    
+
     void Start()
     {
         // initialize boolean control values
@@ -87,7 +88,7 @@ public class TractorBeam : MonoBehaviour
         } // end tractorbeam update
         
         // summons the item by transforming it in the direction of the player
-        if ( itemSelected /*&& tractorBeamActive*/ && summonActive )
+        if ( itemSelected && tractorBeamActive && summonActive )
         {
             Transform itemPos = this.selectedItem.transform;
             Transform playerPos = this.player.transform;
@@ -96,6 +97,7 @@ public class TractorBeam : MonoBehaviour
             
             itemPos.position = Vector3.MoveTowards(itemPos.position, 
                 playerPos.position, Time.deltaTime * tractorBeamSpeed /** scaledDistance*/);
+            // time.deltaTime how much time elapses between frames
         }
 
         if (Input.GetKeyDown(KeyCode.Space)) this.ActivateTractorBeam();

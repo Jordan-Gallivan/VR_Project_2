@@ -5,6 +5,7 @@ using UnityEngine;
 public class MovableItem : MonoBehaviour
 {
     public bool itemIsSelected = false;
+    public bool moveItem = false;
     
     // Start is called before the first frame update
     void Start()
@@ -15,7 +16,7 @@ public class MovableItem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!itemIsSelected)
+        if (!itemIsSelected && moveItem)
         {
             this.gameObject.transform.Translate(new Vector3(0.0f, 0f, 0.01f));
         }
