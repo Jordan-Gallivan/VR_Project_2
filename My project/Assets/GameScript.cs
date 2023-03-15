@@ -12,6 +12,9 @@ public class GameScript : MonoBehaviour
     public Rigidbody rb;
     public int maxDistance = 2;
     public float minDistance = 1;
+
+    public GameObject player;
+    public float playerHeight = 1.5f;
     
     // Start is called before the first frame update
     void Start()
@@ -77,19 +80,23 @@ public class GameScript : MonoBehaviour
 
     public void rayDown()
     {
-        Vector3 m = new Vector3(0, 2f, 0);
+        //////////////  cleaned up code //////////////////
         RaycastHit hit;
-        //Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, Mathf.Infinity);
-        Physics.Raycast(new Vector3(transform.position.x, transform.position.y +1, transform.position.z), transform.TransformDirection(Vector3.down), out hit, 100f);
-        //GameObject.Find("Player").transform.position.y = hit.point.y);
-        
-        GameObject p = GameObject.Find("Player");
-        Vector3 temp = new Vector3(0.0f,hit.point.y,0);
-        transform.position = hit.point;
-        
-        
+        Physics.Raycast(player.transform.position, player.transform.TransformDirection(Vector3.down), out hit, 100f);
+        player.transform.position = new Vector3(player.transform.position.x, hit.point.y + playerHeight, player.transform.position.z);
 
-        
+        /////////////   old code  ///////////////
+        // Vector3 m = new Vector3(0, 2f, 0);  // what is this?
+        // Physics.Raycast(new Vector3(transform.position.x, transform.position.y +1, transform.position.z), transform.TransformDirection(Vector3.down), out hit, 100f);
+        // GameObject.Find("Player").transform.position.y = hit.point.y);
+        // GameObject p = GameObject.Find("Player");
+        // Vector3 temp = new Vector3(0.0f,hit.point.y,0);
+        // transform.position = hit.point;
+        // Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, Mathf.Infinity);
+
+
+
+
 
     }
 }
