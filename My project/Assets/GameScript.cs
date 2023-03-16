@@ -15,6 +15,8 @@ public class GameScript : MonoBehaviour
 
     public GameObject player;
     public float playerHeight = 1.5f;
+
+    public float velocityConstant = 2.0f;
     
     // Start is called before the first frame update
     void Start()
@@ -76,6 +78,15 @@ public class GameScript : MonoBehaviour
     public void goBack()
     {
         rb.velocity = -transform.forward * walkingSpeed;
+    }
+
+    public void MovePlayer(Vector2 trackPad)
+    {
+        // z = forward (vector2.y)
+        // x = strafe (vector2.x)
+        
+        rb.AddForce(trackPad.x * velocityConstant, 0f , trackPad.y * velocityConstant, 
+            ForceMode.VelocityChange);
     }
 
     public void rayDown()
