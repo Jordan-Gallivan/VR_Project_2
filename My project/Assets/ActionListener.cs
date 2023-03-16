@@ -7,16 +7,17 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.XR;
 
+
 public class ActionListener : MonoBehaviour
 {
     // Initialize boolean control values
     public TractorBeam tractorBeam;
     public GameScript player;
-    
-    private XRNode leftxrNode = XRNode.LeftHand;
+
+    public XRNode leftxrNode = XRNode.LeftHand;
     private List<InputDevice> leftDevices = new List<InputDevice>();
     private InputDevice leftDevice;
-    
+
     private XRNode rightxrNode = XRNode.LeftHand;
     private List<InputDevice> rightDevices = new List<InputDevice>();
     private InputDevice rightDevice;
@@ -33,7 +34,7 @@ public class ActionListener : MonoBehaviour
     {
         InputDevices.GetDevicesAtXRNode(leftxrNode, leftDevices);
         leftDevice = leftDevices.FirstOrDefault();
-        
+
         InputDevices.GetDevicesAtXRNode(rightxrNode, rightDevices);
         rightDevice = rightDevices.FirstOrDefault();
     }
@@ -50,7 +51,7 @@ public class ActionListener : MonoBehaviour
     {
         // initialize boolean control values
         // UnityEngine.XR.Input
-        
+       
     }
 
     // Update is called once per frame
@@ -61,62 +62,63 @@ public class ActionListener : MonoBehaviour
             GetDevice();
         }
 
-    // private bool leftGrasp;
-    // private bool leftTrig;
-    // private bool rightGrasp;
-    // private bool rightTrig;
+        // private bool leftGrasp;
+        // private bool leftTrig;
+        // private bool rightGrasp;
+        // private bool rightTrig;
 
         InputFeatureUsage<bool> leftGraspUsage = CommonUsages.gripButton;
+        leftDevice.TryGetFeatureValue(leftGraspUsage, out leftGrasp);
         InputFeatureUsage<bool> leftTrigUsage = CommonUsages.triggerButton;
         InputFeatureUsage<bool> rightGraspUsage = CommonUsages.gripButton;
         InputFeatureUsage<bool> rightTrigUsage = CommonUsages.triggerButton;
         InputFeatureUsage<Vector2> rightTrackPadUsage = CommonUsages.primary2DAxis;
-        
+
         // left grasp => Activate Tractor Beam
         if (leftDevice.TryGetFeatureValue(leftGraspUsage, out leftGrasp) && leftGrasp)
         {
-            Console.WriteLine("Left Grasp Works");
+            Debug.Log("Left Grasp Works");
             tractorBeam.ActivateTractorBeam();
         }
-        else
-        {
-            Console.WriteLine("Left Grasp Off");
-            tractorBeam.DeactivateTractorBeam();
-        }
-        
+        //else
+        //{
+        //    Debug.Log("Left Grasp Off");
+        //    tractorBeam.DeactivateTractorBeam();
+        //}
+
         // left trigger => Summon Object
         if (leftDevice.TryGetFeatureValue(leftTrigUsage, out leftTrig) && leftTrig)
         {
-            Console.WriteLine("Left Trig Works");
+            Debug.Log("Left Trig Works");
             tractorBeam.SummonObject();
         }
-        else
-        {
-            tractorBeam.DeactivateSummon();
-        }
-        
+        //else
+        //{
+        //    tractorBeam.DeactivateSummon();
+        //}
+
         // right grasp => Rotate Object
         if (rightDevice.TryGetFeatureValue(rightGraspUsage, out rightGrasp) && rightGrasp)
         {
-            Console.WriteLine("Right Grasp Works");
+            Debug.Log("Right Grasp Works");
             // need to add method for rotation
         }
-        
+
         // right trigger => Move Object
         if (rightDevice.TryGetFeatureValue(rightTrigUsage, out rightTrig) && rightTrig)
         {
-            Console.WriteLine("Right Trig Works");
+            Debug.Log("Right Trig Works");
             // need to add method for movement
         }
-        
+
         // right trackpad => move player
         if (rightDevice.TryGetFeatureValue(rightTrackPadUsage, out rightTrackPad) && rightTrackPad != Vector2.zero)
         {
-            Console.WriteLine($"Right TrackPad Works {rightTrackPad}");
+            Debug.Log($"Right TrackPad Works {rightTrackPad}");
             // need to add method for moving player
         }
         player.MovePlayer(rightTrackPad);
-        
+
     }
 
 }

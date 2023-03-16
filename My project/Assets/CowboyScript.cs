@@ -17,7 +17,7 @@ public class CowboyScript : MonoBehaviour
 
     public float minDist = 10;
     public float dist;
-    private GameObject playerObj;
+    public GameObject playerObj;
 
     public bool playerInRange = false;
     public float lastAttackTime = 0f;
@@ -30,7 +30,7 @@ public class CowboyScript : MonoBehaviour
         this.tgt = this.gameObject;
         this.speed = new Vector3(xSpeed, ySpeed, zSpeed);
         
-        playerObj = GameObject.FindGameObjectWithTag("Player");
+        
     }
 
     // Update is called once per frame
