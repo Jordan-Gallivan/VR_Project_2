@@ -15,7 +15,7 @@ using UnityEngine.XR;
  *  o add summonable tag to everything we want to select
  *  o refine rotation
  *  o refine movement
- *  o 
+ *  o drop down selection on unity for movement patterns
  */
 
 public class ActionListener2 : MonoBehaviour
@@ -114,6 +114,7 @@ public class ActionListener2 : MonoBehaviour
 
         // move the player according to trackpad input
         player.MovePlayer(trackPad.action.ReadValue<Vector2>());
+        
         // move and rotate selected item
         if (itemIsMoving && itemIsRotating)
         {

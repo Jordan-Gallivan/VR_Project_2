@@ -26,6 +26,7 @@ public class TractorBeam : MonoBehaviour
     private Vector3 itemDestPos;    // position user wants to move object to
     private float distToItem;   // magnitude of vector between player and item
 
+    // tractor beam materials and objects
     public GameObject beamRender;
     public GameObject glowSphere;
     private Color normalGlow = new Color(1.0f, 1.0f, 1.0f, 1.1568f);
@@ -89,8 +90,6 @@ public class TractorBeam : MonoBehaviour
                 Physics.SphereCastAll(this.player.transform.position, 
                     1.0f, this.player.transform.forward);
             float nearest = Mathf.Infinity;
-// need to deselect item if tractor beam comes off it
-// OR need a way to "secure" selected item
             // iterate through hits and determine nearest "summonable" object
             foreach ( RaycastHit hit in tractorBeamObjs )
             {
@@ -144,8 +143,7 @@ public class TractorBeam : MonoBehaviour
         // {
         //     itemOrientation = itemRotatedOrientation;
         // }
-            
-
+        
         if (Input.GetKeyDown(KeyCode.Space)) this.ActivateTractorBeam();
         if (Input.GetKeyUp(KeyCode.Space)) this.DeactivateTractorBeam();
         if (Input.GetKeyDown(KeyCode.O)) this.SummonObject();
