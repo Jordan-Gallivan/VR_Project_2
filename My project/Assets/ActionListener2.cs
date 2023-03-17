@@ -7,130 +7,119 @@ using Unity.VisualScripting;
 using UnityEngine;
 //using UnityEngine.XR;
 using UnityEngine.InputSystem;
+using UnityEngine.XR;
+
+/*
+ * To-Do
+ *  o add moveableItem to everything we want to move
+ *  o add summonable tag to everything we want to select
+ *  o refine rotation
+ *  o refine movement
+ *  o 
+ */
 
 public class ActionListener2 : MonoBehaviour
 {
-    // Initialize boolean control values
+    // TractorBeam and Player Objects
     public TractorBeam tractorBeam;
     public GameScript player;
+    
+    // inputs
+    [SerializeField] private InputActionReference leftTrig;
+    [SerializeField] private InputActionReference rightTrig;
+    [SerializeField] private InputActionReference leftGrasp;
+    [SerializeField] private InputActionReference rightGrasp;
+    [SerializeField] private InputActionReference trackPad;
+    [SerializeField] private InputActionReference rightControllerPos;
+    [SerializeField] private InputActionReference rightControllerRotation;
 
-    [SerializeField] private InputActionReference LeftTrig;
-
-    //private XRNode leftxrNode = XRNode.LeftHand;
-    //private List<InputDevice> leftDevices = new List<InputDevice>();
-    //private InputDevice leftDevice;
-
-    //private XRNode rightxrNode = XRNode.LeftHand;
-    //private List<InputDevice> rightDevices = new List<InputDevice>();
-    //private InputDevice rightDevice;
-
-    //private bool leftGrasp;
-    //private bool leftTrig;
-    //private bool rightGrasp;
-    //private bool rightTrig;
-
-    //private Vector2 rightTrackPad = Vector2.zero;
-
-
-    void GetDevice()
-    {
-        //InputDevices.GetDevicesAtXRNode(leftxrNode, leftDevices);
-        //leftDevice = leftDevices.FirstOrDefault();
-        
-        //InputDevices.GetDevicesAtXRNode(rightxrNode, rightDevices);
-        //rightDevice = rightDevices.FirstOrDefault();
-    }
-
-    //private void OnEnable()
-    //{
-    //    if (!leftDevice.isValid || !rightDevice.isValid)
-    //    {
-    //        GetDevice();
-    //    }
-    //}
+    // Boolean Control values
+    private bool itemIsMoving;
+    private bool itemIsRotating;
+    
+    // Do we need???
+    private Vector3 origControllerPos = Vector3.zero;
+    private Vector3 updatedControllerPos = Vector3.zero;
+    private Quaternion origControllerRot = Quaternion.identity;
+    private Quaternion updatedControllerRot = Quaternion.identity;
 
     void Start()
     {
-        // initialize boolean control values
-        // UnityEngine.XR.Input
-       
+        itemIsMoving = false;
+        itemIsRotating = false;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        //if (!leftDevice.isValid || !rightDevice.isValid)
-        //{
-        //    GetDevice();
-        //}
-        if (LeftTrig.action.WasPerformedThisFrame())
+        /////////////////////////////////////////
+        /////   Detect controller inputs    /////
+        /////////////////////////////////////////
+        
+        // left Grasp => Activate Tractor Beam
+        if (leftGrasp.action.WasPerformedThisFrame())
         {
-            Debug.Log("Victory");
+            Debug.Log("Left Grasp Works");
+            tractorBeam.ActivateTractorBeam();
         }
-        if (LeftTrig.action.WasReleasedThisFrame())
+        if (leftGrasp.action.WasReleasedThisFrame())
         {
-            Debug.Log("Victory AGAIN!!!!");
+            Debug.Log("Left Grasp Deselected");
+            tractorBeam.DeactivateTractorBeam();
         }
 
+        // left Trig => Select NearestItem
+        if (leftTrig.action.WasPerformedThisFrame())
+        {
+            Debug.Log("Left Trig Works");
+            tractorBeam.SelectNearestItem();
+        }
+        if (leftTrig.action.WasReleasedThisFrame())
+        {
+            Debug.Log("Left Trig deselected");
+            tractorBeam.DeSelectNearestItem();
+        }
+        
+        // right grasp => Move and Rotate Object
+        if (rightGrasp.action.WasPerformedThisFrame())
+        {
+            Debug.Log("Right Grasp Works");
+            itemIsMoving = true;
+            itemIsRotating = true;
+        }
+        if (rightGrasp.action.WasReleasedThisFrame())
+        {
+            Debug.Log("Right Grasp Deselected");
+            tractorBeam.EndMovement();
+            tractorBeam.EndRotation();
+            itemIsMoving = false;
+            itemIsRotating = false;
+        }
+        
+        // right trigger => Summon Object
+        if (rightTrig.action.WasPerformedThisFrame())
+        {
+            Debug.Log("Right Trig Works");
+            tractorBeam.SummonObject();
+        }
+        if (rightTrig.action.WasReleasedThisFrame())
+        {
+            Debug.Log("Right Trig deselected");
+            tractorBeam.DeactivateSummon();
+        }
+        
+        /////////////////////////////////////////
+        /////   Update Player and Item      /////
+        /////////////////////////////////////////
 
-
-        // private bool leftGrasp;
-        // private bool leftTrig;
-        // private bool rightGrasp;
-        // private bool rightTrig;
-
-        //InputFeatureUsage<bool> leftGraspUsage = CommonUsages.gripButton;
-        //leftDevice.TryGetFeatureValue(leftGraspUsage, out leftGrasp);
-        //InputFeatureUsage<bool> leftTrigUsage = CommonUsages.triggerButton;
-        //InputFeatureUsage<bool> rightGraspUsage = CommonUsages.gripButton;
-        //InputFeatureUsage<bool> rightTrigUsage = CommonUsages.triggerButton;
-        //InputFeatureUsage<Vector2> rightTrackPadUsage = CommonUsages.primary2DAxis;
-
-        // left grasp => Activate Tractor Beam
-        //if (leftDevice.TryGetFeatureValue(leftGraspUsage, out leftGrasp) && leftGrasp)
-        //{
-        //    Debug.Log("Left Grasp Works");
-        //    tractorBeam.ActivateTractorBeam();
-        //}
-        ////else
-        ////{
-        ////    Debug.Log("Left Grasp Off");
-        ////    tractorBeam.DeactivateTractorBeam();
-        ////}
-
-        //// left trigger => Summon Object
-        //if (leftDevice.TryGetFeatureValue(leftTrigUsage, out leftTrig) && leftTrig)
-        //{
-        //    Debug.Log("Left Trig Works");
-        //    tractorBeam.SummonObject();
-        //}
-        ////else
-        ////{
-        ////    tractorBeam.DeactivateSummon();
-        ////}
-
-        //// right grasp => Rotate Object
-        //if (rightDevice.TryGetFeatureValue(rightGraspUsage, out rightGrasp) && rightGrasp)
-        //{
-        //    Debug.Log("Right Grasp Works");
-        //    // need to add method for rotation
-        //}
-
-        //// right trigger => Move Object
-        //if (rightDevice.TryGetFeatureValue(rightTrigUsage, out rightTrig) && rightTrig)
-        //{
-        //    Debug.Log("Right Trig Works");
-        //    // need to add method for movement
-        //}
-
-        //// right trackpad => move player
-        //if (rightDevice.TryGetFeatureValue(rightTrackPadUsage, out rightTrackPad) && rightTrackPad != Vector2.zero)
-        //{
-        //    Debug.Log($"Right TrackPad Works {rightTrackPad}");
-        //    // need to add method for moving player
-        //}
-        //player.MovePlayer(rightTrackPad);
-
+        // move the player according to trackpad input
+        player.MovePlayer(trackPad.action.ReadValue<Vector2>());
+        // move and rotate selected item
+        if (itemIsMoving && itemIsRotating)
+        {
+            tractorBeam.MoveItem(rightControllerPos.action.ReadValue<Vector3>());
+            tractorBeam.RotateItem(rightControllerRotation.action.ReadValue<Quaternion>());
+        }
     }
 
 }

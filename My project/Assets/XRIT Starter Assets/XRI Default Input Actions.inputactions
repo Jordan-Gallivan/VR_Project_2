@@ -1513,6 +1513,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Velocity",
+            "id": "4d92f3c9-91cf-42e9-839c-348d7a68b482",
+            "actions": [
+                {
+                    "name": "RightVelocity",
+                    "type": "Button",
+                    "id": "db7c2eca-511a-4d53-b94c-497a818fc1b1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "8bf46029-a0e1-432f-9313-401892740238",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic XR Controller",
+                    "action": "RightVelocity",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
